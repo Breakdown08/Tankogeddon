@@ -21,6 +21,9 @@ public:
 	void ReloadSpecial();
 	bool IsReadyToFire();
 	void InitFire();
+	void SpawnProjectile();
+	void SpawnTrace();
+	void AddAmmo(uint8 Value);
 
 	FTimerHandle ReloadTimer;
 	FTimerHandle BurstTimer;
@@ -34,6 +37,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 	class UArrowComponent* ProjectileSpawnPoint;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
+	TSubclassOf<class AProjectile> ProjectileClass;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 	ECannonType CannonType = ECannonType::FireProjectile;
 
@@ -59,4 +65,5 @@ protected:
 private:
 	bool bIsReadyToFire = false;
 	uint8 projectileQueue = 0;
+	bool bIsSpecialFireMode = false;
 };

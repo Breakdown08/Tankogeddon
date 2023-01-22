@@ -38,5 +38,6 @@ private:
 
 	void Fire();
 	void FireSpecial();
+	void SwapCannons();
 };
  
