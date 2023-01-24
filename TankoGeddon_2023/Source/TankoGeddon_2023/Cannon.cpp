@@ -1,5 +1,5 @@
 #include "Cannon.h"
-
+#include "DamageTaker.h"
 #include "Projectile.h"
 #include "Components/ArrowComponent.h"
 #include "Components/StaticMeshComponent.h"
@@ -112,8 +112,20 @@ void ACannon::SpawnTrace()
 		DrawDebugLine(GetWorld(), Start, hitResult.Location, FColor::Purple, false, 1.0f, 0, 2.0f);
 		if (hitResult.GetActor())
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Trace overlap : %s"), *hitResult.GetActor()->GetName());
-			hitResult.GetActor()->Destroy();
+			IDamageTaker* DamageTakerActor = Cast<IDamageTaker>(hitResult.GetActor());
+			if (DamageTakerActor)
+			{
+				FDamageData damageData;
+				damageData.DamageValue = 1.0f;
+				damageData.Instigator = GetOwner();
+				damageData.DamageMaker = this;
+
+				DamageTakerActor->TakeDamage(damageData);
+			}
+			else
+			{
+				hitResult.GetActor()->Destroy();
+			}
 		}
 	}
 	else
@@ -132,6 +144,3 @@ void ACannon::BeginPlay()
 	Super::BeginPlay();
 	Reload();
 }
-
-
-

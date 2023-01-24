@@ -1,9 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "TankController.h"
-
-#include "InputState.h"
 #include "TankPawn.h"
 #include "DrawDebugHelpers.h"
 
@@ -35,12 +30,15 @@ void ATankController::Tick(float DeltaSeconds)
 
 	FVector MouseDirection;
 	DeprojectMousePositionToWorld(MousePos, MouseDirection);
-	FVector tankPosition = TankPawn->GetActorLocation();
-	MousePos.Z = tankPosition.Z;
-	FVector dir = MousePos - tankPosition;
-	dir.Normalize();
-	MousePos = tankPosition + (dir * 1000);
-	DrawDebugLine(GetWorld(), tankPosition, MousePos, FColor::Green, false, 0.1f, 0, 5);
+	if (TankPawn)
+	{
+		FVector tankPosition = TankPawn->GetActorLocation();
+		MousePos.Z = tankPosition.Z;
+		FVector dir = MousePos - tankPosition;
+		dir.Normalize();
+		MousePos = tankPosition + (dir * 1000);
+		//DrawDebugLine(GetWorld(), tankPosition, MousePos, FColor::Green, false, 0.1f, 0, 5);
+	}
 	
 }
 

@@ -1,8 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "TankPawn.h"
-
 #include "TankController.h"
 #include "Camera/CameraComponent.h"
 #include "Components/ArrowComponent.h"
@@ -11,21 +7,8 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 
-// Sets default values
-ATankPawn::ATankPawn()
+ATankPawn::ATankPawn() 
 {
- 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
-
-	BoxCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxCollision"));
-	RootComponent = BoxCollision;
-
-	BodyMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BodyMesh"));
-	BodyMesh->SetupAttachment(BoxCollision);
-
-	TurretMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("TurretMesh"));
-	TurretMesh->SetupAttachment(BodyMesh);
-
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
 	SpringArm->SetupAttachment(BoxCollision);
 	SpringArm->bDoCollisionTest = false;
@@ -35,22 +18,17 @@ ATankPawn::ATankPawn()
 
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(SpringArm);
-
-	CannonSetupPoint = CreateDefaultSubobject<UArrowComponent>(TEXT("CannonSetupPoint"));
-	CannonSetupPoint->SetupAttachment(TurretMesh);
-
 }
 
-// Called when the game starts or when spawned
 void ATankPawn::BeginPlay()
 {
+	UE_LOG(LogTemp, Warning, TEXT("BEGIN PLAY TANK PAWN"));
 	Super::BeginPlay();
-	
 	TankController = Cast<ATankController>(GetController());
-	SetupCannon(EquippedCannonClass);
+	SetupCannon(CannonClass);
 }
 
-// Called every frame
+
 void ATankPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
@@ -67,10 +45,8 @@ void ATankPawn::Tick(float DeltaTime)
 		movePosition = currentLocation + ForwardVector * MovementSpeed * ForwardMoveAxisValue * DeltaTime;
 	}
 	SetActorLocation(movePosition);
-
-	//UE_LOG(LogTemp, Warning, TEXT("RotateRightAxisValue %f"), RotateRightAxisValue);
+	
 	CurrentRightAxisValue = FMath::Lerp(CurrentRightAxisValue, RotateRightAxisValue, RotateInterpolationKey);
-	//UE_LOG(LogTemp, Warning, TEXT("CurrentRightAxisValue %f RotateRightAxisValue %f"), CurrentRightAxisValue, RotateRightAxisValue);
 	
 	float yawRotation = CurrentRightAxisValue * RotationSpeed * DeltaTime;
 	FRotator currentRotation = GetActorRotation();
@@ -108,30 +84,25 @@ void ATankPawn::RotateRight(float Value)
 
 void ATankPawn::SetupCannon(TSubclassOf<ACannon> newCannon)
 {
+	UE_LOG(LogTemp, Warning, TEXT("SETUP CANNON TANK PAWN"));
 	if (!newCannon)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("ERROR SETUP CANNON"));
 		return;
 	}
 	if (Cannon)
 	{
 		Cannon->Destroy();
 	}
-	
+	UE_LOG(LogTemp, Warning, TEXT("TRY SETUP"));
 	FActorSpawnParameters params;
 	params.Instigator = this;
 	params.Owner = this;
 	Cannon = GetWorld()->SpawnActor<ACannon>(newCannon, params);
-	EquippedCannonClass = newCannon;
+	CannonClass = newCannon;
 	Cannon->AttachToComponent(CannonSetupPoint, FAttachmentTransformRules::SnapToTargetIncludingScale);
 }
 
-void ATankPawn::Fire()
-{
-	if (Cannon)
-	{
-		Cannon->Fire();
-	}
-}
 
 
 void ATankPawn::FireSpecial()
@@ -142,6 +113,7 @@ void ATankPawn::FireSpecial()
 	}
 }
 
+
 void ATankPawn::SwapCannons()
 {
 	if (Cannon)
@@ -151,17 +123,11 @@ void ATankPawn::SwapCannons()
 		params.Instigator = this;
 		params.Owner = this;
 		TSubclassOf<ACannon> tempCannon = SecondCannonClass;
-		SecondCannonClass = EquippedCannonClass;
-		EquippedCannonClass = tempCannon;
-		Cannon = GetWorld()->SpawnActor<ACannon>(EquippedCannonClass, params);
+		SecondCannonClass = CannonClass;
+		CannonClass = tempCannon;
+		Cannon = GetWorld()->SpawnActor<ACannon>(CannonClass, params);
 		Cannon->AttachToComponent(CannonSetupPoint, FAttachmentTransformRules::SnapToTargetIncludingScale);
 	}
 }
 
-void ATankPawn::AddAmmo(uint8 Value)
-{
-	if (Cannon)
-	{
-		Cannon->AddAmmo(Value);
-	}
-}
+

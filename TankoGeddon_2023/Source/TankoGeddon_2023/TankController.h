@@ -1,14 +1,9 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
 #include "TankController.generated.h"
 
-/**
- * 
- */
 UCLASS()
 class TANKOGEDDON_2023_API ATankController : public APlayerController
 {
@@ -17,9 +12,7 @@ class TANKOGEDDON_2023_API ATankController : public APlayerController
 public:
 	ATankController();
 	virtual void SetPawn(APawn* InPawn) override;
-
 	
-
 	FVector GetMousePos() { return MousePos; };
 
 protected:
