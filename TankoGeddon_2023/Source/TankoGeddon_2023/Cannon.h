@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "GameStructs.h"
 #include "GameFramework/Actor.h"
+//#include "Camera/CameraShakeBase.h",
 #include "Cannon.generated.h"
 
 UCLASS()
@@ -22,6 +23,7 @@ public:
 	void SpawnProjectile();
 	void SpawnTrace();
 	void AddAmmo(uint8 Value);
+	void SetDirectionProjectilePoint(APawn* PlayerPawn);
 
 	FTimerHandle ReloadTimer;
 	FTimerHandle BurstTimer;
@@ -51,13 +53,25 @@ protected:
 	uint8 BurstFireCount = 3;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
-	float FireRange = 1000.0f;
+	float FireRange = 1500.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 	float FireDamage = 1.0f;
 	
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 	uint8 Ammo = 10;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
+	UAudioComponent* AudioEffect;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
+	UParticleSystemComponent* ShootEffect;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Effects")
+	UForceFeedbackEffect* ShootForceEffect;
+	
+	//UPROPERTY(EditAnywhere)
+	//TSubclassOf<UCameraShakeBase> ShootShake;
 
 	
 private:

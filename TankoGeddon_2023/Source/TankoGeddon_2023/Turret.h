@@ -19,7 +19,6 @@ public:
 protected:
 	virtual void BeginPlay() override;
 	void Targeting();
-	
 	void RotateToPlayer();
 	bool IsPlayerInRange();
 	bool CanFire();
@@ -29,7 +28,7 @@ protected:
 	APawn* PlayerPawn;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Targeting params")
-	float TargetingRange = 1000.f;
+	float TargetingRange = 2000.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Targeting params")
 	float TargetingSpeed = 0.1f;

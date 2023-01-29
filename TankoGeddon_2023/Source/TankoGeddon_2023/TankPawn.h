@@ -21,6 +21,7 @@ public:
 	virtual void MoveRight(float Value);
 	virtual void RotateRight(float Value);
 	
+	
 	void SwapCannons();
 	void SetupCannon(TSubclassOf<ACannon> newCannon);
 	void FireSpecial();
@@ -53,6 +54,5 @@ private:
 	float RotateRightAxisValue = 0.0f;
 	float CurrentRightAxisValue = 0.0f;
 	float RotateInterpolationKey = 0.1f;
-	float TurretInterpolationKey = 0.5f;
 };
 

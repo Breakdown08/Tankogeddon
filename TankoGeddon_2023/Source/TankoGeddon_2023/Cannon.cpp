@@ -1,8 +1,12 @@
 #include "Cannon.h"
 #include "DamageTaker.h"
 #include "Projectile.h"
+#include "Unit.h"
 #include "Components/ArrowComponent.h"
+#include "Components/AudioComponent.h"
 #include "Components/StaticMeshComponent.h"
+#include "Kismet/KismetMathLibrary.h"
+#include "Particles/ParticleSystemComponent.h"
 
 ACannon::ACannon()
 {
@@ -16,6 +20,12 @@ ACannon::ACannon()
 
 	ProjectileSpawnPoint = CreateDefaultSubobject<UArrowComponent>(TEXT("ProjectileSpawnPoint"));
 	ProjectileSpawnPoint->SetupAttachment(CannonMesh);
+
+	ShootEffect = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("ShootEffect"));
+	ShootEffect->SetupAttachment(ProjectileSpawnPoint);
+
+	AudioEffect = CreateDefaultSubobject<UAudioComponent>(TEXT("AudioEffect"));
+	AudioEffect->SetupAttachment(ProjectileSpawnPoint);
 }
 
 void ACannon::Fire()
@@ -24,6 +34,24 @@ void ACannon::Fire()
 	{
 		return;
 	}
+	ShootEffect->ActivateSystem();
+	AudioEffect->Play();
+
+	/*if (GetOwner() && GetOwner() == GetWorld()->GetFirstPlayerController()->GetPawn())
+	{
+		if (ShootForceEffect)
+		{
+			FForceFeedbackParameters shootForceEffectParams;
+			shootForceEffectParams.bLooping = false;
+			shootForceEffectParams.Tag = "shootForceEffectParams";
+			GetWorld()->GetFirstPlayerController()->ClientPlayForceFeedback(ShootForceEffect, shootForceEffectParams);
+		}
+		if (ShootShake)
+		{
+			GetWorld()->GetFirstPlayerController()->ClientStartCameraShake(ShootShake);
+		}
+	}*/
+	
 	bIsSpecialFireMode = false;
 	bIsReadyToFire = false;
 	Ammo--;
@@ -70,6 +98,7 @@ void ACannon::InitFire()
 	{
 		projectileQueue += 1;
 	}
+	
 	if (CannonType == ECannonType::FireProjectile)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, FString::Printf(TEXT("Fire projectile %hhu"), Ammo));
@@ -137,6 +166,15 @@ void ACannon::SpawnTrace()
 void ACannon::AddAmmo(uint8 Value)
 {
 	Ammo+= Value;
+}
+
+void ACannon::SetDirectionProjectilePoint(APawn* TargetPawn)
+{
+	FRotator currentRotation = CannonMesh->GetComponentRotation();
+	FRotator targetRotation = UKismetMathLibrary::FindLookAtRotation(ProjectileSpawnPoint->GetComponentLocation(), TargetPawn->GetActorLocation());
+	targetRotation.Roll = currentRotation.Roll;
+	targetRotation.Yaw = currentRotation.Yaw;
+	ProjectileSpawnPoint->SetWorldRotation(FMath::Lerp(currentRotation, targetRotation, 1));
 }
 
 void ACannon::BeginPlay()
