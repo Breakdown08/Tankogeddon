@@ -52,4 +52,6 @@ protected:
 	bool CanFire();
 
 	void Fire();
+
+	void Initialize();
 };

@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "Cannon.h"
 #include "Unit.h"
+#include "Engine/TargetPoint.h"
 #include "GameFramework/Pawn.h"
 #include "TankPawn.generated.h"
 
@@ -21,11 +22,11 @@ public:
 	virtual void MoveRight(float Value);
 	virtual void RotateRight(float Value);
 	
-	
 	void SwapCannons();
 	void SetupCannon(TSubclassOf<ACannon> newCannon);
 	void FireSpecial();
-
+	TArray<FVector> GetPatrollingPoints();
+	void SetPatrollingPoints(TArray<ATargetPoint*> NewPatrollingPoints);
 	
 protected:
 	virtual void BeginPlay() override;
@@ -38,7 +39,9 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Cannon")
 	TSubclassOf<ACannon> SecondCannonClass;	
-	
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI", META = (MakeEditWidget = true))
+	TArray<ATargetPoint*> PatrollingPoints;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
 	float MovementSpeed = 100.0f;
