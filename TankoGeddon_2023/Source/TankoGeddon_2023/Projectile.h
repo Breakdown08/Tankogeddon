@@ -14,13 +14,22 @@ class TANKOGEDDON_2023_API AProjectile : public AActor
 public:	
 	AProjectile();
 
-	void Start();
+	virtual void Start();
+	void Explode();
 
 	FTimerHandle MoveTimer;
 
 protected:
-	void Move();
+	UFUNCTION()
+	virtual void Move();
 
+	UFUNCTION()
+	void SetDamageToActor(AActor* OtherActor);
+	
+	UFUNCTION()
+	void MakeImpulse(AActor* OtherActor);
+	
+	
 	UFUNCTION()
 	void OnMeshOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor,
 		class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
@@ -39,4 +48,14 @@ protected:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Component")
 	float Damage = 1.0f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Damage")
+    float PushForce = 1000;
+
+	UPROPERTY(BlueprintReadWrite, Category = "Movement params")
+	float ExplodeRadius = 200;
+
+	UPROPERTY(BlueprintReadWrite, Category = "Movement params")
+	bool IsCanExplode = true;
+
 };

@@ -42,7 +42,7 @@ void ATurret::Targeting()
 		{
 			if (CanFire())
 			{
-				Cannon->SetDirectionProjectilePoint(PlayerPawn);
+				//Cannon->SetDirectionProjectilePoint(PlayerPawn);
 				Fire();
 			}
 		}

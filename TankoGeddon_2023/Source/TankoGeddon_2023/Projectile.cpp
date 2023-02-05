@@ -32,26 +32,77 @@ void AProjectile::Move()
 	SetActorLocation(movePosition);
 }
 
+void AProjectile::SetDamageToActor(AActor* OtherActor)
+{
+	IDamageTaker* DamageTakerActor = Cast<IDamageTaker>(OtherActor);
+	if (DamageTakerActor)
+	{
+		FDamageData damageData;
+		damageData.DamageValue = Damage;
+		damageData.Instigator = GetOwner();
+		damageData.DamageMaker = this;
+		DamageTakerActor->TakeDamage(damageData);
+	}
+}
+
+void AProjectile::MakeImpulse(AActor* OtherActor)
+{
+	UPrimitiveComponent* mesh = Cast<UPrimitiveComponent>(OtherActor->GetRootComponent());
+	if (mesh)
+	{
+		if (mesh->IsSimulatingPhysics())
+		{
+			FVector forceVector = OtherActor->GetActorLocation() - GetActorLocation();
+			forceVector.Normalize();
+			mesh->AddImpulse(forceVector * PushForce, NAME_None, true);
+		}
+	}
+}
+
 void AProjectile::OnMeshOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
-	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+                                     UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	//UE_LOG(LogTemp, Warning, TEXT("Projectile overlap : %s"), *OtherActor->GetName());
 	if (OtherActor)
 	{
-		IDamageTaker* DamageTakerActor = Cast<IDamageTaker>(OtherActor);
-		if (DamageTakerActor)
-		{
-			FDamageData damageData;
-			damageData.DamageValue = Damage;
-			damageData.Instigator = GetOwner();
-			damageData.DamageMaker = this;
-
-			DamageTakerActor->TakeDamage(damageData);
-		}
-		else
-		{
-			OtherActor->Destroy();
-		}
+		SetDamageToActor(OtherActor);
+		MakeImpulse(OtherActor);
 	}
 	Destroy();
+}
+
+
+void AProjectile::Explode()
+{
+	FVector startPos = GetActorLocation();
+	FVector endPos = startPos + FVector(0.1f);
+	FCollisionShape Shape = FCollisionShape::MakeSphere(ExplodeRadius);
+	FCollisionQueryParams params = FCollisionQueryParams::DefaultQueryParam;
+	params.AddIgnoredActor(this);
+	params.bTraceComplex = true;
+	params.TraceTag = "Explode Trace";
+	TArray<FHitResult> AttackHit;
+	FQuat Rotation = FQuat::Identity;
+	bool sweepResult = GetWorld()->SweepMultiByChannel
+	(
+		AttackHit,
+		startPos,
+		endPos,
+		Rotation,
+		ECollisionChannel::ECC_Visibility,
+		Shape,
+		params
+	);
+	GetWorld()->DebugDrawTraceTag = "Explode Trace";
+	if (sweepResult)
+	{
+		for (FHitResult hitResult : AttackHit)
+		{
+			AActor* otherActor = hitResult.GetActor();
+			if (!otherActor)
+				continue;
+			SetDamageToActor(otherActor);
+			MakeImpulse(otherActor);
+		}
+	}
 }
