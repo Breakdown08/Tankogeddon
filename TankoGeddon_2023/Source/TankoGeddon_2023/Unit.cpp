@@ -1,10 +1,12 @@
 #include "Unit.h"
 #include "Cannon.h"
 #include "HealthComponent.h"
+#include "MyGameInstance.h"
 #include "Components/ArrowComponent.h"
 #include "Components/AudioComponent.h"
 #include "Components/BoxComponent.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "Tasks/GameplayTask_WaitDelay.h"
 
@@ -89,7 +91,19 @@ void AUnit::Die()
 	}
 	DieParticleEffect->ActivateSystem();
 	DieAudioEffect->Play();
+
+	if (IsPlayerControlled())
+	{
+		UMyGameInstance* MyGameInstance = Cast<UMyGameInstance>( GetGameInstance());
+		if (MyGameInstance)
+		{
+			MyGameInstance->ShowWidget();
+		}
+	}
+	
 	GetWorld()->GetTimerManager().SetTimer(DieTimer, this, &AUnit::SelfDestroy, 1, false);
+
+	
 }
 
 void AUnit::DamageTaked(float Value)
