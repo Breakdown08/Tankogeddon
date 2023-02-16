@@ -28,6 +28,11 @@ float UHealthComponent::GetHealth() const
     return CurrentHealth;
 }
 
+float UHealthComponent::GetMaxHealth() const
+{
+	return MaxHealth;
+}
+
 void UHealthComponent::AddHealth(float newHealth)
 {
     CurrentHealth += newHealth;

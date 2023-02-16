@@ -34,10 +34,14 @@ public:
 	FVector GetEyesPosition();
 	
 	bool IsPlayerSeen(AUnit* Spectator, AUnit* Player);
+
+	float GetHealth();
+	float GetMaxHealth();
 	
 protected:
 	void Die();
 	void DamageTaked(float Value);
+	void BeginPlay() override;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 	UStaticMeshComponent* BodyMesh;
@@ -71,6 +75,9 @@ protected:
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
 	UParticleSystemComponent* DieParticleEffect;
+
+	UPROPERTY(VisibleAnywhere)
+	class UWidgetComponent* HealthWidgetComponent;
 	
 	UPROPERTY()
 	ACannon* Cannon;

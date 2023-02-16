@@ -20,6 +20,7 @@ public:
 
 	void TakeDamage(FDamageData DamageData);
 	float GetHealth() const;
+	float GetMaxHealth() const;
 	void AddHealth(float newHealth);
 	float GetHealthState() const;
 	

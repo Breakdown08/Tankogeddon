@@ -1,10 +1,12 @@
 #include "Unit.h"
 #include "Cannon.h"
+#include "HealthBar.h"
 #include "HealthComponent.h"
 #include "MyGameInstance.h"
 #include "Components/ArrowComponent.h"
 #include "Components/AudioComponent.h"
 #include "Components/BoxComponent.h"
+#include "Components/WidgetComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystemComponent.h"
@@ -41,6 +43,9 @@ AUnit::AUnit()
 
 	DieAudioEffect = CreateDefaultSubobject<UAudioComponent>(TEXT("DieAudioEffect"));
 	DieAudioEffect->SetupAttachment(BodyMesh);
+
+	HealthWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("HealthBar"));
+	HealthWidgetComponent->SetupAttachment(BodyMesh);
 }
 
 void AUnit::TakeDamage(FDamageData DamageData)
@@ -111,6 +116,13 @@ void AUnit::DamageTaked(float Value)
 	UE_LOG(LogTemp, Warning, TEXT("Unit %s taked damage: %f, health: %f"), *GetName(), Value, HealthComponent->GetHealth());
 }
 
+void AUnit::BeginPlay()
+{
+	Super::BeginPlay();
+	UHealthBar* HealthBar = Cast<UHealthBar>(HealthWidgetComponent->GetUserWidgetObject());
+	HealthBar->SetOwnerUnit(this);
+}
+
 bool AUnit::IsPlayerSeen(AUnit* Spectator, AUnit* Player)
 {
 	FVector playerPos = Player->GetActorLocation();
@@ -132,6 +144,16 @@ bool AUnit::IsPlayerSeen(AUnit* Spectator, AUnit* Player)
 	}
 	DrawDebugLine(GetWorld(), eyesPos, hitResult.Location, FColor::Cyan, false, 0.5f, 0, 10);
 	return false;
+}
+
+float AUnit::GetHealth()
+{
+	return this->HealthComponent->GetHealth();
+}
+
+float AUnit::GetMaxHealth()
+{
+	return this->HealthComponent->GetMaxHealth();
 }
 
 
