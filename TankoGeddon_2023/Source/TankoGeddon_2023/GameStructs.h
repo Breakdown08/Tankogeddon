@@ -10,6 +10,13 @@ enum class ECannonType : uint8
 	FireTrace = 1 UMETA(DisplayName = "Use trace"),
 };
 
+UENUM(BlueprintType)
+enum class EWidgetType : uint8
+{
+	MainMenu = 0 UMETA(DisplayName = "Show Main menu"),
+	GameOver = 1 UMETA(DisplayName = "Show Game over"),
+};
+
 USTRUCT()
 struct FDamageData
 {

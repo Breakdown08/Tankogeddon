@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
+#include "GameStructs.h"
 #include "MyGameInstance.generated.h"
 
 /**
@@ -17,8 +18,11 @@ public:
 	UMyGameInstance(const FObjectInitializer& ObjectInitializer);
 
 	virtual void Init() override;
-	void ShowWidget();
+	void ShowWidget(EWidgetType WidgetType);
+	TSubclassOf<class UUserWidget> GetWidgetByType(EWidgetType WidgetType);
+	void OnStart() override;
 
 private:
 	TSubclassOf<class UUserWidget> GameOverWidgetClass;
+	TSubclassOf<class UUserWidget> MainMenuWidgetClass;
 };

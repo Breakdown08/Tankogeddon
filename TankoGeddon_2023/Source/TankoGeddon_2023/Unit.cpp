@@ -102,7 +102,7 @@ void AUnit::Die()
 		UMyGameInstance* MyGameInstance = Cast<UMyGameInstance>( GetGameInstance());
 		if (MyGameInstance)
 		{
-			MyGameInstance->ShowWidget();
+			MyGameInstance->ShowWidget(EWidgetType::GameOver);
 		}
 	}
 	
