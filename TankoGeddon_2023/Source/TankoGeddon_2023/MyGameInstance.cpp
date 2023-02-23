@@ -5,6 +5,7 @@
 #include "Blueprint/UserWidget.h"
 #include "UObject/ConstructorHelpers.h"
 #include "GameStructs.h"
+#include "Camera/CameraComponent.h"
 #include "Engine/Engine.h"
 
 UMyGameInstance::UMyGameInstance(const FObjectInitializer& ObjectInitializer)

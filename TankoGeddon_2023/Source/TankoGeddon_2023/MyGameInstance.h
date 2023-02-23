@@ -21,8 +21,11 @@ public:
 	void ShowWidget(EWidgetType WidgetType);
 	TSubclassOf<class UUserWidget> GetWidgetByType(EWidgetType WidgetType);
 	void OnStart() override;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
+	class UCameraComponent* Camera;
 
 private:
 	TSubclassOf<class UUserWidget> GameOverWidgetClass;
 	TSubclassOf<class UUserWidget> MainMenuWidgetClass;
+
 };
