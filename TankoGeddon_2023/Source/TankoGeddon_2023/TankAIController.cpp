@@ -57,7 +57,7 @@ float ATankAIController::GetRotationValue()
 	FVector forwardDirection = TankPawn->GetActorForwardVector();
 	FVector rightDirection = TankPawn->GetActorRightVector();
 
-	DrawDebugLine(GetWorld(), pawnLocation, currentPoint, FColor::Green, false, 0.1f, 0, 5);
+	//DrawDebugLine(GetWorld(), pawnLocation, currentPoint, FColor::Green, false, 0.1f, 0, 5);
 
 	float forwardAngle = FMath::RadiansToDegrees(acosf(FVector::DotProduct(forwardDirection, moveDirection)));
 	float rightAngle = FMath::RadiansToDegrees(acosf(FVector::DotProduct(rightDirection, moveDirection)));

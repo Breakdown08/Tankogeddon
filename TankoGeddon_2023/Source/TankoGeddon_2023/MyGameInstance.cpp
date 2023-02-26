@@ -56,5 +56,5 @@ TSubclassOf<UUserWidget> UMyGameInstance::GetWidgetByType(EWidgetType WidgetType
 void UMyGameInstance::OnStart()
 {
 	Super::OnStart();
-	ShowWidget(EWidgetType::MainMenu);
+	//ShowWidget(EWidgetType::MainMenu);
 }

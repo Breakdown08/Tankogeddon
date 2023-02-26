@@ -138,11 +138,11 @@ bool AUnit::IsPlayerSeen(AUnit* Spectator, AUnit* Player)
 	{
 		if (hitResult.GetActor())
 		{
-			DrawDebugLine(GetWorld(), eyesPos, hitResult.Location, FColor::Cyan, false, 0.5f, 0, 10);
+			//DrawDebugLine(GetWorld(), eyesPos, hitResult.Location, FColor::Cyan, false, 0.5f, 0, 10);
 			return hitResult.GetActor() == Player;
 		}
 	}
-	DrawDebugLine(GetWorld(), eyesPos, hitResult.Location, FColor::Cyan, false, 0.5f, 0, 10);
+	//DrawDebugLine(GetWorld(), eyesPos, hitResult.Location, FColor::Cyan, false, 0.5f, 0, 10);
 	return false;
 }
 

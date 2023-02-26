@@ -25,8 +25,8 @@ void APhysicsProjectile::Start()
 	{
 		for (FVector position : CurrentTrajectory)
 		{
-			DrawDebugSphere(GetWorld(), position, 5, 8, FColor::Purple, true, 1, 0,
-			                2);
+			//DrawDebugSphere(GetWorld(), position, 5, 8, FColor::Purple, true, 1, 0,
+			                //2);
 		}
 	}
 	TragectoryPointIndex = 0;

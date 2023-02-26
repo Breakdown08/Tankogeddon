@@ -93,7 +93,7 @@ void AProjectile::Explode()
 		Shape,
 		params
 	);
-	GetWorld()->DebugDrawTraceTag = "Explode Trace";
+	//GetWorld()->DebugDrawTraceTag = "Explode Trace";
 	if (sweepResult)
 	{
 		for (FHitResult hitResult : AttackHit)
